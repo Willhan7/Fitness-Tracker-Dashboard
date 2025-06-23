@@ -1,0 +1,100 @@
+body {
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background: #f7f9fa;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+.container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 24px 18px 32px 18px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 18px;
+  font-size: 2rem;
+}
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+.form-group {
+  flex: 1 1 180px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+}
+label {
+  margin-bottom: 4px;
+  font-size: 0.98rem;
+}
+input[type="date"],
+input[type="number"],
+input[type="text"] {
+  padding: 6px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+button[type="submit"] {
+  background: #2d8cf0;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 22px;
+  align-self: flex-end;
+  transition: background 0.2s;
+}
+button[type="submit"]:hover {
+  background: #1976d2;
+}
+.chart-section {
+  margin: 28px 0 18px 0;
+}
+.table-section {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  background: #fafbfc;
+}
+th, td {
+  border: 1px solid #e3e6e8;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 1rem;
+}
+th {
+  background: #f0f4f8;
+}
+@media (max-width: 600px) {
+  .container {
+    padding: 10px 2vw 18px 2vw;
+  }
+  form {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .form-group {
+    min-width: 0;
+  }
+  h1 {
+    font-size: 1.3rem;
+  }
+  th, td {
+    font-size: 0.95rem;
+    padding: 6px 2px;
+  }
+} 

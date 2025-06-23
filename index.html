@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>健身打卡 / 体重追踪仪表板 Fitness Tracker Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>健身打卡 / 体重追踪仪表板<br><span class="en">Fitness Tracker Dashboard</span></h1>
+    <form id="record-form">
+      <div class="form-group">
+        <label for="date">日期 / <span class="en">Date</span></label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">体重 (kg) / <span class="en">Weight (kg)</span></label>
+        <input type="number" step="0.1" id="weight" name="weight" required>
+      </div>
+      <div class="form-group">
+        <label for="exercise">运动时间 (分钟) / <span class="en">Exercise Time (min)</span></label>
+        <input type="number" step="1" id="exercise" name="exercise" required>
+      </div>
+      <div class="form-group">
+        <label for="note">饮食备注 / <span class="en">Diet Note</span></label>
+        <input type="text" id="note" name="note" maxlength="100">
+      </div>
+      <button type="submit">提交 / <span class="en">Submit</span></button>
+    </form>
+    <div class="chart-section">
+      <canvas id="trendChart"></canvas>
+    </div>
+    <div class="table-section">
+      <h2>记录列表 / <span class="en">Record List</span></h2>
+      <table id="record-table">
+        <thead>
+          <tr>
+            <th>日期<br><span class="en">Date</span></th>
+            <th>体重 (kg)<br><span class="en">Weight (kg)</span></th>
+            <th>运动时间 (分钟)<br><span class="en">Exercise (min)</span></th>
+            <th>饮食备注<br><span class="en">Diet Note</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 数据行由 JS 动态生成 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 
