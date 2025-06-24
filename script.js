@@ -19,19 +19,122 @@ function saveRecords() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
-// 渲染表格
+// 渲染表格，支持单元格双击编辑和删除
 function renderTable() {
   tableBody.innerHTML = '';
-  records.slice().reverse().forEach(record => {
+  records.slice().reverse().forEach((record, idx) => {
     const tr = document.createElement('tr');
+    const realIdx = records.length - 1 - idx;
+    // 每个单元格加 data-idx 和 data-field
     tr.innerHTML = `
-      <td>${record.date}</td>
-      <td>${record.weight}</td>
-      <td>${record.exercise}</td>
-      <td>${record.note || ''}</td>
+      <td class="editable" data-idx="${realIdx}" data-field="date">${record.date}</td>
+      <td class="editable" data-idx="${realIdx}" data-field="weight">${record.weight}</td>
+      <td class="editable" data-idx="${realIdx}" data-field="exercise">${record.exercise}</td>
+      <td class="editable" data-idx="${realIdx}" data-field="note">${record.note || ''}</td>
+      <td>
+        <button class="delete-btn" data-idx="${realIdx}">删除/Delete</button>
+      </td>
     `;
     tableBody.appendChild(tr);
   });
+  // 绑定删除事件
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.onclick = function() {
+      const idx = parseInt(this.dataset.idx);
+      if (confirm('确定要删除这条记录吗？\nAre you sure to delete this record?')) {
+        records.splice(idx, 1);
+        saveRecords();
+        renderTable();
+        renderChart();
+      }
+    };
+  });
+  // 绑定双击编辑事件
+  document.querySelectorAll('.editable').forEach(td => {
+    td.ondblclick = function() {
+      enterCellEdit(this);
+    };
+  });
+}
+
+// 单元格进入编辑状态
+function enterCellEdit(td) {
+  const idx = parseInt(td.dataset.idx);
+  const field = td.dataset.field;
+  const oldValue = td.textContent;
+  let input;
+  if (field === 'date') {
+    input = document.createElement('input');
+    input.type = 'date';
+    input.value = records[idx][field];
+  } else if (field === 'weight') {
+    input = document.createElement('input');
+    input.type = 'number';
+    input.step = '0.1';
+    input.value = records[idx][field];
+  } else if (field === 'exercise') {
+    input = document.createElement('input');
+    input.type = 'number';
+    input.step = '1';
+    input.value = records[idx][field];
+  } else {
+    input = document.createElement('input');
+    input.type = 'text';
+    input.value = records[idx][field] || '';
+  }
+  input.style.width = '90%';
+  td.innerHTML = '';
+  td.appendChild(input);
+  input.focus();
+  input.select();
+
+  // 保存/取消逻辑
+  input.onkeydown = function(e) {
+    if (e.key === 'Enter') {
+      let newValue = input.value.trim();
+      if (field === 'date') {
+        if (!newValue) {
+          alert('日期不能为空！\nDate cannot be empty!');
+          return;
+        }
+        // 检查日期唯一性
+        if (records.some((r, j) => r.date === newValue && j !== idx)) {
+          alert('该日期已有其他记录！\nThis date already has another record!');
+          return;
+        }
+        records[idx][field] = newValue;
+      } else if (field === 'weight') {
+        newValue = parseFloat(newValue);
+        if (isNaN(newValue)) {
+          alert('体重必须为数字！\nWeight must be a number!');
+          return;
+        }
+        records[idx][field] = newValue;
+      } else if (field === 'exercise') {
+        newValue = parseInt(newValue);
+        if (isNaN(newValue)) {
+          alert('运动时间必须为数字！\nExercise time must be a number!');
+          return;
+        }
+        records[idx][field] = newValue;
+      } else {
+        records[idx][field] = newValue;
+      }
+      // 日期变动后重新排序
+      if (field === 'date') {
+        records.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+      saveRecords();
+      renderTable();
+      renderChart();
+    } else if (e.key === 'Escape') {
+      td.innerHTML = oldValue;
+    }
+  };
+  // 失焦时还原（不保存）
+  input.onblur = function() {
+    td.innerHTML = oldValue;
+  };
 }
 
 // 获取最近 N 天的数据
